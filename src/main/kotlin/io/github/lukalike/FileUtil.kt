@@ -26,7 +26,7 @@ fun readMeasurementData(): List<Measurement> {
         try {
             Measurement(
                 LocalDateTime.parse(inputFields[0]),
-                inputFields[1],
+                MeasurementType.valueOf(inputFields[1]),
                 inputFields[2].toDouble()
             )
         } catch (e: Exception) {

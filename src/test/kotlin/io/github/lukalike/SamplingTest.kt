@@ -146,24 +146,24 @@ class SamplingTest {
     fun `correctly samples multiple types & multiple intervals`() {
         val expectedOutput = mapOf(
             defaultMeasurement(
-                defaultDate(15, 0), "typeB"
+                defaultDate(15, 0), MeasurementType.TEMP
             ) to defaultDate(15, 0),
             defaultMeasurement(
-                defaultDate(35, 0), "typeB"
+                defaultDate(35, 0), MeasurementType.TEMP
             ) to defaultDate(35, 0),
             defaultMeasurement(
-                defaultDate(13, 14), "typeA"
+                defaultDate(13, 14), MeasurementType.SPO2
             ) to defaultDate(15, 0),
             defaultMeasurement(
-                defaultDate(35, 0), "typeA"
+                defaultDate(35, 0), MeasurementType.SPO2
             ) to defaultDate(35, 0)
         )
 
         val inputMeasurements = listOf(
-            defaultMeasurement(defaultDate(12, 1), "typeB"),
-            defaultMeasurement(defaultDate(31, 15), "typeA"),
-            defaultMeasurement(defaultDate(12, 16), "typeA"),
-            defaultMeasurement(defaultDate(32, 14), "typeB")
+            defaultMeasurement(defaultDate(12, 1), MeasurementType.TEMP),
+            defaultMeasurement(defaultDate(31, 15), MeasurementType.SPO2),
+            defaultMeasurement(defaultDate(12, 16), MeasurementType.SPO2),
+            defaultMeasurement(defaultDate(32, 14), MeasurementType.TEMP)
         ) + expectedOutput.keys
 
         assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
@@ -172,17 +172,17 @@ class SamplingTest {
     @Test
     fun `correctly samples multiple types & multiple intervals when duplicated dates exist`() {
         val expectedOutput = mapOf(
-            defaultMeasurement(defaultDate(15, 0), "typeB") to defaultDate(15, 0),
-            defaultMeasurement(defaultDate(35, 0), "typeB") to defaultDate(35, 0),
-            defaultMeasurement(defaultDate(13, 14), "typeA") to defaultDate(15, 0),
-            defaultMeasurement(defaultDate(35, 0), "typeA") to defaultDate(35, 0)
+            defaultMeasurement(defaultDate(15, 0), MeasurementType.TEMP) to defaultDate(15, 0),
+            defaultMeasurement(defaultDate(35, 0), MeasurementType.TEMP) to defaultDate(35, 0),
+            defaultMeasurement(defaultDate(13, 14), MeasurementType.SPO2) to defaultDate(15, 0),
+            defaultMeasurement(defaultDate(35, 0), MeasurementType.SPO2) to defaultDate(35, 0)
         )
 
         val inputMeasurements = listOf(
-            defaultMeasurement(defaultDate(12, 1), "typeB"),
-            defaultMeasurement(defaultDate(31, 15), "typeA"),
-            defaultMeasurement(defaultDate(12, 16), "typeA"),
-            defaultMeasurement(defaultDate(32, 14), "typeB")
+            defaultMeasurement(defaultDate(12, 1), MeasurementType.TEMP),
+            defaultMeasurement(defaultDate(31, 15), MeasurementType.SPO2),
+            defaultMeasurement(defaultDate(12, 16), MeasurementType.SPO2),
+            defaultMeasurement(defaultDate(32, 14), MeasurementType.TEMP)
         ) + expectedOutput.keys
 
         assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
@@ -214,7 +214,7 @@ class SamplingTest {
 
     private fun defaultMeasurement(
         measurementTime: LocalDateTime,
-        type: String = "typeA",
+        type: MeasurementType = MeasurementType.TEMP,
         measurementValue: Double = Random.nextDouble()
     ) =
         Measurement(measurementTime, type, measurementValue)

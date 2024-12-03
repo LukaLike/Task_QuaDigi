@@ -23,7 +23,7 @@ private fun List<Measurement>.filterMeasurementsStartingAt(startOfSampling: Loca
 
 private fun List<Measurement>.groupByType() = groupBy { it.type }
 
-private fun Map<String, List<Measurement>>.sampleIn5MinuteIntervals() =
+private fun Map<MeasurementType, List<Measurement>>.sampleIn5MinuteIntervals() =
     this.map { measurementGroups ->
         measurementGroups.value
             .groupBy { value ->
