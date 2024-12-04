@@ -1,9 +1,12 @@
 package io.github.lukalike
 
+import io.github.lukalike.sampler.Measurement
+import io.github.lukalike.sampler.MeasurementType
+import io.github.lukalike.util.sample
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import kotlin.random.Random
-import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /**
  * Each `expectedOutput`'s value corresponds to the interval value its key belongs to (expected output)
@@ -22,7 +25,7 @@ class SamplingTest {
             defaultMeasurement(defaultDate(4, 14))
         ) + expectedOutput.keys
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
+        assertTrue(expectedOutput.convertValuesToIntervalBorders().equalsIgnoreOrder(inputMeasurements.sample()))
     }
 
     @Test
@@ -42,7 +45,7 @@ class SamplingTest {
             defaultMeasurement(defaultDate(34, 0))
         ) + expectedOutput.keys
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
+        assertTrue(expectedOutput.convertValuesToIntervalBorders().equalsIgnoreOrder(inputMeasurements.sample()))
     }
 
     @Test
@@ -58,7 +61,7 @@ class SamplingTest {
             defaultMeasurement(defaultDate(6, 15)),
         ) + expectedOutput.keys
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
+        assertTrue(expectedOutput.convertValuesToIntervalBorders().equalsIgnoreOrder(inputMeasurements.sample()))
     }
 
     @Test
@@ -84,7 +87,7 @@ class SamplingTest {
             defaultMeasurement(LocalDateTime.of(2024, 11, 28, 0, 0, 2)),
         ) + expectedOutput.keys
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
+        assertTrue(expectedOutput.convertValuesToIntervalBorders().equalsIgnoreOrder(inputMeasurements.sample()))
     }
 
     @Test
@@ -95,7 +98,9 @@ class SamplingTest {
             defaultMeasurement(defaultDate(20, 0)) to defaultDate(20, 0)
         )
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), expectedOutput.keys.toList().sample())
+        assertTrue(
+            expectedOutput.convertValuesToIntervalBorders().equalsIgnoreOrder(expectedOutput.keys.toList().sample())
+        )
     }
 
     @Test
@@ -121,9 +126,8 @@ class SamplingTest {
             defaultMeasurement(LocalDateTime.of(2025, 6, 30, 7, 59, 1)),
         ) + expectedOutput.keys
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
+        assertTrue(expectedOutput.convertValuesToIntervalBorders().equalsIgnoreOrder(inputMeasurements.sample()))
     }
-
 
     @Test
     fun `correctly samples and orders single type & multiple intervals`() {
@@ -139,7 +143,7 @@ class SamplingTest {
             defaultMeasurement(defaultDate(45, 1))
         ) + expectedOutput.keys
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
+        assertTrue(expectedOutput.convertValuesToIntervalBorders().equalsIgnoreOrder(inputMeasurements.sample()))
     }
 
     @Test
@@ -166,7 +170,7 @@ class SamplingTest {
             defaultMeasurement(defaultDate(32, 14), MeasurementType.TEMP)
         ) + expectedOutput.keys
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
+        assertTrue(expectedOutput.convertValuesToIntervalBorders().equalsIgnoreOrder(inputMeasurements.sample()))
     }
 
     @Test
@@ -185,7 +189,7 @@ class SamplingTest {
             defaultMeasurement(defaultDate(32, 14), MeasurementType.TEMP)
         ) + expectedOutput.keys
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample())
+        assertTrue(expectedOutput.convertValuesToIntervalBorders().equalsIgnoreOrder(inputMeasurements.sample()))
     }
 
     @Test
@@ -201,12 +205,15 @@ class SamplingTest {
             defaultMeasurement(defaultDate(12, 15)),
         ) + expectedOutput.keys
 
-        assertEquals(expectedOutput.convertValuesToIntervalBorders(), inputMeasurements.sample(defaultDate(6, 0)))
+        assertTrue(
+            expectedOutput.convertValuesToIntervalBorders()
+                .equalsIgnoreOrder(inputMeasurements.sample(startOfSampling = defaultDate(6, 0)))
+        )
     }
 
     @Test
     fun `correctly samples empty list`() {
-        assertEquals(listOf(), listOf<Measurement>().sample())
+        assertTrue(listOf<Measurement>().equalsIgnoreOrder(listOf<Measurement>().sample()))
     }
 
     private fun Map<Measurement, LocalDateTime>.convertValuesToIntervalBorders() =
@@ -219,7 +226,9 @@ class SamplingTest {
     ) =
         Measurement(measurementTime, type, measurementValue)
 
-    private fun defaultDate(minute: Int, second: Int) =
-        LocalDateTime.of(2024, 11, 27, 18, minute, second)
+    private fun defaultDate(minute: Int, second: Int) = LocalDateTime.of(2024, 11, 27, 18, minute, second)
+
+    fun <T> List<T>.equalsIgnoreOrder(comparingList: List<T>) =
+        this.size == comparingList.size && this.toSet() == comparingList.toSet()
 
 }

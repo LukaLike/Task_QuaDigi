@@ -1,5 +1,7 @@
-package io.github.lukalike
+package io.github.lukalike.util
 
+import io.github.lukalike.sampler.Measurement
+import io.github.lukalike.sampler.MeasurementType
 import java.io.File
 import java.io.FileNotFoundException
 import java.time.LocalDateTime

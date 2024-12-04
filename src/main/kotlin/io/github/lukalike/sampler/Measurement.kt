@@ -1,4 +1,4 @@
-package io.github.lukalike
+package io.github.lukalike.sampler
 
 import java.time.LocalDateTime
 
